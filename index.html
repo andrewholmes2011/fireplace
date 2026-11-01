@@ -56,13 +56,50 @@ body.clean .toolbar{opacity:0;pointer-events:none}
 <div class="bat b1">🦇</div><div class="bat b2">🦇</div><div class="bat b3">🦇</div>
 <div class="hill-back"></div><div class="tree left"></div><div class="tree right"></div><div class="house"></div><div class="door"></div><div class="grave g1"></div><div class="grave g2"></div>
 <div class="hills"></div><div class="pumpkin p1"><div class="face"></div></div><div class="pumpkin p2"><div class="face"></div></div><div class="fog"></div><div class="grain"></div>
-<div class="toolbar" id="toolbar"><button id="clean">Stream mode</button><button id="full">Fullscreen</button><a href="https://open.spotify.com/playlist/37i9dQZF1DWYa1w6FMMTnG?si=93f27fc6c3c54547" target="_blank" rel="noopener noreferrer">Spotify playlist ↗</a><span class="hint">Use licensed music in OBS / YouTube Studio</span></div>
+<div class="toolbar" id="toolbar"><button id="clean">Stream mode</button><button id="full">Fullscreen</button><button id="download">Download 25s video (D)</button><span id="downloadStatus" aria-live="polite"></span><a href="https://open.spotify.com/playlist/37i9dQZF1DWYa1w6FMMTnG?si=93f27fc6c3c54547" target="_blank" rel="noopener noreferrer">Spotify playlist ↗</a><span class="hint">Use licensed music in OBS / YouTube Studio</span></div>
 </main>
 <script>
 const cleanButton=document.getElementById('clean');
 cleanButton.addEventListener('click',()=>{document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'});
 document.getElementById('full').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}});
-document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='h'){document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'}});
+const downloadButton=document.getElementById('download'),downloadStatus=document.getElementById('downloadStatus');let recording=false;
+function drawFrame(ctx,seconds){
+ const W=1920,H=1080,p=seconds/25*Math.PI*2;
+ const g=ctx.createRadialGradient(960,760,80,960,760,1100);g.addColorStop(0,'#4b2146');g.addColorStop(.42,'#21142f');g.addColorStop(1,'#070912');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ for(let i=0;i<95;i++){const x=(i*197.3)%W,y=(i*89.7)%660;ctx.globalAlpha=.35+.35*(.5+.5*Math.sin(p*2+i));ctx.fillStyle='#fff0d8';ctx.beginPath();ctx.arc(x,y,1+i%3,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+ ctx.shadowColor='#f4c58b';ctx.shadowBlur=90;ctx.fillStyle='#f0d7b5';ctx.beginPath();ctx.arc(1450,205,125,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ ctx.fillStyle='#b49b8e';ctx.globalAlpha=.24;[[1410,255,20],[1490,160,14],[1510,250,24]].forEach(([x,y,r])=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;
+ for(let i=0;i<3;i++){const x=((i*820+Math.sin(p+i)*90+2300)%2620)-350;ctx.fillStyle='#171426';ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(x,390+i*95,310,75,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+ ctx.textAlign='center';ctx.shadowColor='#ff8a27';ctx.shadowBlur=24;ctx.fillStyle='#f6bd78';ctx.font='600 25px Arial';ctx.fillText('A NIGHT OF SPOOKY MAGIC',960,270);
+ ctx.shadowColor='#000';ctx.shadowBlur=24;ctx.fillStyle='#fff0d8';ctx.font='bold 150px Georgia';ctx.fillText('HAPPY',960,420);ctx.fillText('HALLOWEEN',960,565);ctx.shadowBlur=0;ctx.fillStyle='#f4c9a0';ctx.font='italic 34px Georgia';ctx.fillText('Welcome, if you dare...',960,625);
+ ctx.fillStyle='#1b1424';ctx.beginPath();ctx.moveTo(0,770);ctx.quadraticCurveTo(500,650,980,790);ctx.quadraticCurveTo(1450,660,1920,780);ctx.lineTo(1920,1080);ctx.lineTo(0,1080);ctx.fill();ctx.fillStyle='#090a12';ctx.fillRect(0,880,W,200);
+ ctx.fillStyle='#090912';ctx.beginPath();ctx.moveTo(760,850);ctx.lineTo(960,650);ctx.lineTo(1160,850);ctx.lineTo(1125,850);ctx.lineTo(1125,1020);ctx.lineTo(795,1020);ctx.lineTo(795,850);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#ffb64e';ctx.shadowColor='#ff8c22';ctx.shadowBlur=28;ctx.fillRect(835,850,65,85);ctx.fillRect(1020,850,65,85);ctx.shadowBlur=0;ctx.fillStyle='#080810';ctx.beginPath();ctx.roundRect(925,885,70,135,32);ctx.fill();
+ function tree(x,base,s){ctx.save();ctx.translate(x,base);ctx.scale(s,s);ctx.fillStyle='#080a11';ctx.beginPath();ctx.moveTo(0,-390);ctx.lineTo(-48,-250);ctx.lineTo(-110,-280);ctx.lineTo(-70,-180);ctx.lineTo(-145,-195);ctx.lineTo(-70,-80);ctx.lineTo(-100,0);ctx.lineTo(35,0);ctx.lineTo(55,-95);ctx.lineTo(140,-190);ctx.lineTo(70,-180);ctx.lineTo(110,-285);ctx.lineTo(45,-250);ctx.closePath();ctx.fill();ctx.restore()}
+ tree(180,990,1.25);tree(1740,990,1.4);tree(420,1000,.7);
+ ctx.fillStyle='#171923';[[500,930],[1370,940]].forEach(([x,y])=>{ctx.beginPath();ctx.roundRect(x,y,65,110,30);ctx.fill()});
+ function pumpkin(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#f47b18';ctx.shadowColor='#ff8b2b';ctx.shadowBlur=28;ctx.beginPath();ctx.ellipse(0,0,68,54,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#4a6a36';ctx.fillRect(-5,-68,12,22);ctx.fillStyle='#3b1b13';ctx.beginPath();ctx.moveTo(-38,-18);ctx.lineTo(-12,0);ctx.lineTo(-25,24);ctx.fill();ctx.beginPath();ctx.moveTo(38,-18);ctx.lineTo(12,0);ctx.lineTo(25,24);ctx.fill();ctx.beginPath();ctx.moveTo(-28,20);ctx.quadraticCurveTo(0,65,28,20);ctx.fill();ctx.restore()}
+ pumpkin(260,990,1);pumpkin(1650,1000,.82);
+ for(let i=0;i<3;i++){const a=p+i*2.1,x=960+Math.sin(a)*690,y=280+Math.cos(a*2)*105;ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(a)*.12);ctx.fillStyle='#080811';ctx.beginPath();ctx.moveTo(-45,0);ctx.quadraticCurveTo(-25,-30,-5,-8);ctx.lineTo(0,-20);ctx.lineTo(5,-8);ctx.quadraticCurveTo(25,-30,45,0);ctx.quadraticCurveTo(20,-5,0,22);ctx.quadraticCurveTo(-20,-5,-45,0);ctx.fill();ctx.restore()}
+ ctx.globalAlpha=.09;ctx.fillStyle='#d8c5df';for(let i=0;i<5;i++){const x=960+Math.sin(p+i)*700;ctx.beginPath();ctx.ellipse(x,1030+i*10,430,22,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+}
+async function downloadLoop(){
+ if(recording)return;
+ const canvas=document.createElement('canvas');canvas.width=1920;canvas.height=1080;const ctx=canvas.getContext('2d');
+ if(!canvas.captureStream||!window.MediaRecorder){downloadStatus.textContent='Video export is not supported in this browser.';return}
+ const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
+ if(!mime){downloadStatus.textContent='WebM export is not supported in this browser.';return}
+ recording=true;downloadButton.disabled=true;downloadStatus.textContent='Recording 25-second loop…';
+ const stream=canvas.captureStream(30),chunks=[],recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8000000});let start=performance.now(),raf;
+ function frame(now){drawFrame(ctx,((now-start)/1000)%25);if(recording)raf=requestAnimationFrame(frame)}
+ drawFrame(ctx,0);raf=requestAnimationFrame(frame);
+ recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+ recorder.onerror=()=>{recording=false;cancelAnimationFrame(raf);stream.getTracks().forEach(t=>t.stop());downloadButton.disabled=false;downloadStatus.textContent='Export failed. Try current Chrome or Edge.'};
+ recorder.onstop=()=>{cancelAnimationFrame(raf);stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks,{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='halloween-loop-25-seconds.webm';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);recording=false;downloadButton.disabled=false;downloadStatus.textContent='Downloaded: halloween-loop-25-seconds.webm'};
+ recorder.start();setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop()},25000);
+}
+downloadButton.addEventListener('click',downloadLoop);
+document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='h'&&!e.repeat){document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'}if(e.key.toLowerCase()==='d'&&!e.repeat&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();downloadLoop()}});
 </script>
 </body>
 </html>
