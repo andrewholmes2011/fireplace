@@ -56,7 +56,7 @@ body.clean .toolbar{opacity:0;pointer-events:none}
 <div class="bat b1">🦇</div><div class="bat b2">🦇</div><div class="bat b3">🦇</div>
 <div class="hill-back"></div><div class="tree left"></div><div class="tree right"></div><div class="house"></div><div class="door"></div><div class="grave g1"></div><div class="grave g2"></div>
 <div class="hills"></div><div class="pumpkin p1"><div class="face"></div></div><div class="pumpkin p2"><div class="face"></div></div><div class="fog"></div><div class="grain"></div>
-<div class="toolbar" id="toolbar"><button id="clean">Stream mode</button><button id="full">Fullscreen</button><button id="download">Download 25s video (D)</button><span id="downloadStatus" aria-live="polite"></span><a href="https://open.spotify.com/playlist/37i9dQZF1DWYa1w6FMMTnG?si=93f27fc6c3c54547" target="_blank" rel="noopener noreferrer">Spotify playlist ↗</a><span class="hint">Use licensed music in OBS / YouTube Studio</span></div>
+<div class="toolbar" id="toolbar"><button id="clean">Stream mode</button><button id="full">Fullscreen</button><button id="download">Download MP4 (D)</button><span id="downloadStatus" aria-live="polite"></span><a href="https://open.spotify.com/playlist/37i9dQZF1DWYa1w6FMMTnG?si=93f27fc6c3c54547" target="_blank" rel="noopener noreferrer">Spotify playlist ↗</a><span class="hint">Use licensed music in OBS / YouTube Studio</span></div>
 </main>
 <script>
 const cleanButton=document.getElementById('clean');
@@ -85,18 +85,38 @@ function drawFrame(ctx,seconds){
 }
 async function downloadLoop(){
  if(recording)return;
- const canvas=document.createElement('canvas');canvas.width=1920;canvas.height=1080;const ctx=canvas.getContext('2d');
- if(!canvas.captureStream||!window.MediaRecorder){downloadStatus.textContent='Video export is not supported in this browser.';return}
- const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
- if(!mime){downloadStatus.textContent='WebM export is not supported in this browser.';return}
- recording=true;downloadButton.disabled=true;downloadStatus.textContent='Recording 25-second loop…';
- const stream=canvas.captureStream(30),chunks=[],recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8000000});let start=performance.now(),raf;
- function frame(now){drawFrame(ctx,((now-start)/1000)%25);if(recording)raf=requestAnimationFrame(frame)}
- drawFrame(ctx,0);raf=requestAnimationFrame(frame);
- recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
- recorder.onerror=()=>{recording=false;cancelAnimationFrame(raf);stream.getTracks().forEach(t=>t.stop());downloadButton.disabled=false;downloadStatus.textContent='Export failed. Try current Chrome or Edge.'};
- recorder.onstop=()=>{cancelAnimationFrame(raf);stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks,{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='halloween-loop-25-seconds.webm';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);recording=false;downloadButton.disabled=false;downloadStatus.textContent='Downloaded: halloween-loop-25-seconds.webm'};
- recorder.start();setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop()},25000);
+ if(!('VideoEncoder' in window)||!('VideoFrame' in window)){downloadStatus.textContent='MP4 export requires a recent version of Chrome or Edge with WebCodecs support.';return}
+ recording=true;downloadButton.disabled=true;downloadStatus.textContent='Preparing MP4 encoder…';
+ let encoder,raf;
+ try{
+  const {Muxer,ArrayBufferTarget}=await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.mjs');
+  const width=1920,height=1080,fps=30,totalFrames=25*fps;
+  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+  const ctx=canvas.getContext('2d',{alpha:false});
+  const config={codec:'avc1.640028',width,height,bitrate:8000000,framerate:fps,avc:{format:'avc'}};
+  const supported=await VideoEncoder.isConfigSupported(config);
+  if(!supported.supported)throw new Error('This browser does not support the required H.264 MP4 encoder.');
+  const target=new ArrayBufferTarget();
+  const muxer=new Muxer({target,video:{codec:'avc',width,height,frameRate:fps},fastStart:'in-memory'});
+  encoder=new VideoEncoder({output:(chunk,meta)=>muxer.addVideoChunk(chunk,meta),error:e=>{throw e}});
+  encoder.configure(config);
+  for(let i=0;i<totalFrames;i++){
+   drawFrame(ctx,i/fps);
+   const frame=new VideoFrame(canvas,{timestamp:Math.round(i*1000000/fps),duration:Math.round(1000000/fps)});
+   encoder.encode(frame,{keyFrame:i===0||i%150===0});frame.close();
+   if(i%30===0){downloadStatus.textContent='Encoding MP4… '+Math.round(i/totalFrames*100)+'%';await new Promise(resolve=>setTimeout(resolve,0))}
+  }
+  downloadStatus.textContent='Finalizing MP4…';
+  await encoder.flush();encoder.close();muxer.finalize();
+  const blob=new Blob([target.buffer],{type:'video/mp4'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='halloween-loop-25-seconds.mp4';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  downloadStatus.textContent='Downloaded: halloween-loop-25-seconds.mp4';
+ }catch(error){
+  if(encoder&&encoder.state!=='closed')encoder.close();
+  downloadStatus.textContent='MP4 export failed: '+(error&&error.message?error.message:'unsupported browser');
+ }finally{recording=false;downloadButton.disabled=false}
 }
 downloadButton.addEventListener('click',downloadLoop);
 document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='h'&&!e.repeat){document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'}if(e.key.toLowerCase()==='d'&&!e.repeat&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();downloadLoop()}});
