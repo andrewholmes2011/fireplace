@@ -1,125 +1,74 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#100b1c">
-<title>Halloween Night — Livestream Background</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#120b07"><meta name="description" content="Animated fireplace screensaver with 25-second video export."><title>Hearth — Fireplace Screensaver</title>
 <style>
-:root{color-scheme:dark;--orange:#ff8a27;--gold:#ffc46b;--purple:#9b62d9}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090711;font-family:Georgia,'Times New Roman',serif}
-.scene{position:relative;width:100%;height:100%;min-height:100svh;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 72%,#4b2146 0,#21142f 35%,#100e22 68%,#070912 100%)}
-.sky{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,8,19,.25),transparent 48%,rgba(7,5,13,.2));}
-.moon{position:absolute;width:clamp(100px,16vw,230px);aspect-ratio:1;right:15%;top:10%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff4d8,#e6cba6 55%,#a78a80 100%);box-shadow:0 0 45px 12px #f4c58b55,0 0 130px 45px #c58be733}
-.moon:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 25% 62%,#9b8b8250 0 7%,transparent 8%),radial-gradient(circle at 65% 30%,#8b7b7640 0 5%,transparent 6%),radial-gradient(circle at 70% 70%,#8b7b7640 0 9%,transparent 10%)}
-.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 12% 18%,#fff 50%,transparent 55%),radial-gradient(1px 1px at 30% 13%,#fff 50%,transparent 55%),radial-gradient(2px 2px at 54% 22%,#ffe8bd 50%,transparent 55%),radial-gradient(1px 1px at 77% 14%,#fff 50%,transparent 55%),radial-gradient(1px 1px at 88% 38%,#fff 50%,transparent 55%),radial-gradient(2px 2px at 42% 39%,#fff 50%,transparent 55%),radial-gradient(1px 1px at 7% 45%,#fff 50%,transparent 55%);opacity:.75}
-.cloud{position:absolute;width:42vw;height:13vw;min-height:100px;top:29%;left:-10%;border-radius:50%;background:#171426;filter:blur(28px);opacity:.62;animation:cloud 48s linear infinite}
-.cloud.c2{top:42%;left:58%;width:50vw;opacity:.42;animation-duration:65s;animation-direction:reverse}
-@keyframes cloud{from{transform:translateX(-12vw)}to{transform:translateX(120vw)}}
-.title-wrap{position:absolute;z-index:5;top:24%;left:50%;width:90%;transform:translateX(-50%);text-align:center}
-.eyebrow{font:600 clamp(10px,1.2vw,17px)/1.5 Arial,sans-serif;letter-spacing:.55em;text-transform:uppercase;color:#f6bd78;text-shadow:0 0 15px #f80}
-h1{margin:.08em 0 .02em;font-size:clamp(42px,8.4vw,122px);line-height:.95;font-weight:700;letter-spacing:.035em;color:#fff0d8;text-shadow:0 4px 0 #8c3b23,0 8px 24px #000,0 0 35px #ff8a2777}
-.subtitle{font:italic clamp(13px,1.6vw,23px)/1.5 Georgia,serif;color:#f4c9a0;letter-spacing:.12em;text-shadow:0 2px 9px #000}
-.hills{position:absolute;z-index:2;bottom:0;left:0;width:100%;height:36%;background:linear-gradient(180deg,#17101e,#090a12 72%)}
-.hill-back{position:absolute;z-index:1;bottom:17%;left:-8%;width:116%;height:22%;border-radius:50% 50% 0 0;background:#1b1424;transform:rotate(-2deg)}
-.house{position:absolute;z-index:3;bottom:19%;left:50%;width:clamp(160px,24vw,350px);height:clamp(130px,19vw,260px);transform:translateX(-50%);background:#0b0b14;clip-path:polygon(50% 0,100% 36%,91% 36%,91% 100%,8% 100%,8% 36%,0 36%)}
-.house:before{content:"";position:absolute;left:25%;top:42%;width:18%;height:28%;background:#ffb64e;box-shadow:0 0 20px #ff8c22}
-.house:after{content:"";position:absolute;right:25%;top:42%;width:18%;height:28%;background:#ffb64e;box-shadow:0 0 20px #ff8c22}
-.door{position:absolute;z-index:4;bottom:19%;left:50%;transform:translateX(-50%);width:clamp(34px,5vw,68px);height:clamp(72px,10vw,135px);background:#090810;border:2px solid #3b2531;border-bottom:0;border-radius:50% 50% 0 0}
-.tree{position:absolute;z-index:4;bottom:17%;width:clamp(100px,15vw,210px);height:43%;background:#080a11;clip-path:polygon(50% 0,43% 23%,31% 17%,35% 35%,18% 31%,27% 50%,5% 47%,25% 65%,19% 78%,43% 74%,45% 100%,57% 100%,58% 74%,82% 80%,75% 63%,97% 49%,74% 50%,84% 31%,65% 36%,68% 17%,55% 24%)}
-.tree.left{left:4%;transform:scale(1.12)}.tree.right{right:3%;transform:scale(1.35)}
-.grave{position:absolute;z-index:3;bottom:12%;width:clamp(25px,4vw,58px);height:clamp(38px,6vw,82px);background:#11131a;border-radius:50% 50% 4px 4px;border:2px solid #252333}
-.grave.g1{left:25%;transform:rotate(-7deg)}.grave.g2{right:23%;transform:rotate(8deg) scale(.8)}
-.pumpkin{position:absolute;z-index:6;bottom:7%;width:clamp(46px,7vw,100px);aspect-ratio:1.15;border-radius:48% 48% 42% 42%;background:radial-gradient(ellipse at 50% 50%,#ffb13e 0,#f47b18 60%,#8f3513 100%);box-shadow:inset 9px 0 0 #9e461c55,inset -9px 0 0 #7e341d55,0 0 24px #ff8b2b77}
-.pumpkin:before{content:"";position:absolute;left:46%;top:-10%;width:10%;height:18%;background:#4a6a36;transform:rotate(9deg);border-radius:4px}
-.face{position:absolute;inset:0;background:linear-gradient(70deg,transparent 31%,#3b1b13 32% 40%,transparent 41%),linear-gradient(-70deg,transparent 31%,#3b1b13 32% 40%,transparent 41%);clip-path:polygon(20% 32%,40% 44%,50% 29%,60% 44%,80% 32%,72% 62%,50% 82%,28% 62%);opacity:.9}
-.p1{left:12%}.p2{right:12%;transform:scale(.8)}
-.fog{position:absolute;z-index:7;bottom:0;left:-30%;width:160%;height:20%;background:linear-gradient(180deg,transparent,#c8b4d01b 60%,#d8c5df12);filter:blur(18px);animation:fog 18s ease-in-out infinite alternate}
-@keyframes fog{from{transform:translateX(-4%);opacity:.55}to{transform:translateX(4%);opacity:1}}
-.bat{position:absolute;z-index:4;color:#080811;font-size:clamp(22px,3vw,40px);animation:fly 16s linear infinite}
-.b1{top:22%;left:-8%;animation-delay:-3s}.b2{top:35%;left:-8%;font-size:24px;animation-delay:-10s}.b3{top:15%;left:-8%;font-size:18px;animation-delay:-6s}
-@keyframes fly{from{transform:translateX(-10vw) translateY(0) rotate(-8deg)}50%{transform:translateX(55vw) translateY(-28px) rotate(8deg)}to{transform:translateX(120vw) translateY(8px) rotate(-8deg)}}
-.grain{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E")}
-.toolbar{position:absolute;z-index:20;left:18px;bottom:16px;display:flex;gap:9px;align-items:center;padding:10px 12px;border:1px solid #ffffff26;border-radius:14px;background:#100b1dcc;backdrop-filter:blur(12px);font:12px Arial,sans-serif;color:#f6e7d3;transition:opacity .25s}
-.toolbar button,.toolbar a{border:1px solid #ffffff30;border-radius:9px;padding:9px 12px;background:#ffffff12;color:#fff;text-decoration:none;font:600 12px Arial,sans-serif;cursor:pointer}
-.toolbar button:hover,.toolbar a:hover{background:#ff8a2733;border-color:#ffb36b}
-.hint{opacity:.72;font-size:11px;margin-left:4px}
-body.clean .toolbar{opacity:0;pointer-events:none}
-@media(max-width:600px){.title-wrap{top:30%}.moon{right:8%;top:9%}.tree.left{left:-3%}.tree.right{right:-5%}.toolbar{left:8px;bottom:8px;gap:5px;padding:7px}.toolbar button,.toolbar a{padding:8px;font-size:10px}.hint{display:none}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
-</style>
-</head>
-<body>
-<main class="scene" aria-label="Animated Halloween night livestream background">
-<div class="sky"></div><div class="stars"></div><div class="moon"></div><div class="cloud"></div><div class="cloud c2"></div>
-<div class="title-wrap"><div class="eyebrow">A night of spooky magic</div><h1>HAPPY<br>HALLOWEEN</h1><div class="subtitle">Welcome, if you dare...</div></div>
-<div class="bat b1">🦇</div><div class="bat b2">🦇</div><div class="bat b3">🦇</div>
-<div class="hill-back"></div><div class="tree left"></div><div class="tree right"></div><div class="house"></div><div class="door"></div><div class="grave g1"></div><div class="grave g2"></div>
-<div class="hills"></div><div class="pumpkin p1"><div class="face"></div></div><div class="pumpkin p2"><div class="face"></div></div><div class="fog"></div><div class="grain"></div>
-<div class="toolbar" id="toolbar"><button id="clean">Stream mode</button><button id="full">Fullscreen</button><button id="download">Download MP4 (D)</button><span id="downloadStatus" aria-live="polite"></span><a href="https://open.spotify.com/playlist/37i9dQZF1DWYa1w6FMMTnG?si=93f27fc6c3c54547" target="_blank" rel="noopener noreferrer">Spotify playlist ↗</a><span class="hint">Use licensed music in OBS / YouTube Studio</span></div>
-</main>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080604;font-family:Inter,Arial,sans-serif}canvas{display:block;width:100vw;height:100vh}
+#controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid #ffffff24;border-radius:14px;background:#100b08d9;backdrop-filter:blur(14px);color:#f4e5d5;box-shadow:0 12px 40px #0008;opacity:0;transition:opacity .3s;white-space:nowrap}
+body:hover #controls,body.controls-visible #controls{opacity:1}button{border:1px solid #ffffff25;border-radius:9px;background:#ffffff0d;color:#fff;padding:10px 14px;font-size:12px;font-weight:650;cursor:pointer}button:hover{background:#a94d1f;border-color:#e68b4a}button:disabled{opacity:.55;cursor:wait}#download{background:#98451f;border-color:#d77b3e}#status{font-size:11px;color:#f2bd8b;min-width:130px}
+#hint{position:fixed;top:18px;right:22px;color:#fff9;font-size:11px;letter-spacing:.04em;opacity:0;transition:opacity .3s;text-shadow:0 2px 8px #000}body:hover #hint{opacity:1}
+@media(max-width:700px){#controls{bottom:10px;gap:5px;padding:8px;max-width:96vw;flex-wrap:wrap;justify-content:center}button{padding:8px 10px;font-size:11px}#status{min-width:100%;text-align:center}}
+</style></head><body>
+<canvas id="fireplace" aria-label="Animated fireplace with glowing logs and flames"></canvas>
+<div id="hint">D · Download 25-second video &nbsp; | &nbsp; F · Fullscreen &nbsp; | &nbsp; H · Show controls</div>
+<div id="controls"><button id="download">Download 25s video (D)</button><button id="fullscreen">Fullscreen (F)</button><button id="audio">Enable fire audio</button><span id="status" role="status" aria-live="polite">Fireplace is burning</span></div>
 <script>
-const cleanButton=document.getElementById('clean');
-cleanButton.addEventListener('click',()=>{document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'});
-document.getElementById('full').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}});
-const downloadButton=document.getElementById('download'),downloadStatus=document.getElementById('downloadStatus');let recording=false;
-function drawFrame(ctx,seconds){
- const W=1920,H=1080,p=seconds/25*Math.PI*2;
- const g=ctx.createRadialGradient(960,760,80,960,760,1100);g.addColorStop(0,'#4b2146');g.addColorStop(.42,'#21142f');g.addColorStop(1,'#070912');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- for(let i=0;i<95;i++){const x=(i*197.3)%W,y=(i*89.7)%660;ctx.globalAlpha=.35+.35*(.5+.5*Math.sin(p*2+i));ctx.fillStyle='#fff0d8';ctx.beginPath();ctx.arc(x,y,1+i%3,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
- ctx.shadowColor='#f4c58b';ctx.shadowBlur=90;ctx.fillStyle='#f0d7b5';ctx.beginPath();ctx.arc(1450,205,125,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
- ctx.fillStyle='#b49b8e';ctx.globalAlpha=.24;[[1410,255,20],[1490,160,14],[1510,250,24]].forEach(([x,y,r])=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;
- for(let i=0;i<3;i++){const x=((i*820+Math.sin(p+i)*90+2300)%2620)-350;ctx.fillStyle='#171426';ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(x,390+i*95,310,75,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
- ctx.textAlign='center';ctx.shadowColor='#ff8a27';ctx.shadowBlur=24;ctx.fillStyle='#f6bd78';ctx.font='600 25px Arial';ctx.fillText('A NIGHT OF SPOOKY MAGIC',960,270);
- ctx.shadowColor='#000';ctx.shadowBlur=24;ctx.fillStyle='#fff0d8';ctx.font='bold 150px Georgia';ctx.fillText('HAPPY',960,420);ctx.fillText('HALLOWEEN',960,565);ctx.shadowBlur=0;ctx.fillStyle='#f4c9a0';ctx.font='italic 34px Georgia';ctx.fillText('Welcome, if you dare...',960,625);
- ctx.fillStyle='#1b1424';ctx.beginPath();ctx.moveTo(0,770);ctx.quadraticCurveTo(500,650,980,790);ctx.quadraticCurveTo(1450,660,1920,780);ctx.lineTo(1920,1080);ctx.lineTo(0,1080);ctx.fill();ctx.fillStyle='#090a12';ctx.fillRect(0,880,W,200);
- ctx.fillStyle='#090912';ctx.beginPath();ctx.moveTo(760,850);ctx.lineTo(960,650);ctx.lineTo(1160,850);ctx.lineTo(1125,850);ctx.lineTo(1125,1020);ctx.lineTo(795,1020);ctx.lineTo(795,850);ctx.closePath();ctx.fill();
- ctx.fillStyle='#ffb64e';ctx.shadowColor='#ff8c22';ctx.shadowBlur=28;ctx.fillRect(835,850,65,85);ctx.fillRect(1020,850,65,85);ctx.shadowBlur=0;ctx.fillStyle='#080810';ctx.beginPath();ctx.roundRect(925,885,70,135,32);ctx.fill();
- function tree(x,base,s){ctx.save();ctx.translate(x,base);ctx.scale(s,s);ctx.fillStyle='#080a11';ctx.beginPath();ctx.moveTo(0,-390);ctx.lineTo(-48,-250);ctx.lineTo(-110,-280);ctx.lineTo(-70,-180);ctx.lineTo(-145,-195);ctx.lineTo(-70,-80);ctx.lineTo(-100,0);ctx.lineTo(35,0);ctx.lineTo(55,-95);ctx.lineTo(140,-190);ctx.lineTo(70,-180);ctx.lineTo(110,-285);ctx.lineTo(45,-250);ctx.closePath();ctx.fill();ctx.restore()}
- tree(180,990,1.25);tree(1740,990,1.4);tree(420,1000,.7);
- ctx.fillStyle='#171923';[[500,930],[1370,940]].forEach(([x,y])=>{ctx.beginPath();ctx.roundRect(x,y,65,110,30);ctx.fill()});
- function pumpkin(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#f47b18';ctx.shadowColor='#ff8b2b';ctx.shadowBlur=28;ctx.beginPath();ctx.ellipse(0,0,68,54,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#4a6a36';ctx.fillRect(-5,-68,12,22);ctx.fillStyle='#3b1b13';ctx.beginPath();ctx.moveTo(-38,-18);ctx.lineTo(-12,0);ctx.lineTo(-25,24);ctx.fill();ctx.beginPath();ctx.moveTo(38,-18);ctx.lineTo(12,0);ctx.lineTo(25,24);ctx.fill();ctx.beginPath();ctx.moveTo(-28,20);ctx.quadraticCurveTo(0,65,28,20);ctx.fill();ctx.restore()}
- pumpkin(260,990,1);pumpkin(1650,1000,.82);
- for(let i=0;i<3;i++){const a=p+i*2.1,x=960+Math.sin(a)*690,y=280+Math.cos(a*2)*105;ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(a)*.12);ctx.fillStyle='#080811';ctx.beginPath();ctx.moveTo(-45,0);ctx.quadraticCurveTo(-25,-30,-5,-8);ctx.lineTo(0,-20);ctx.lineTo(5,-8);ctx.quadraticCurveTo(25,-30,45,0);ctx.quadraticCurveTo(20,-5,0,22);ctx.quadraticCurveTo(-20,-5,-45,0);ctx.fill();ctx.restore()}
- ctx.globalAlpha=.09;ctx.fillStyle='#d8c5df';for(let i=0;i<5;i++){const x=960+Math.sin(p+i)*700;ctx.beginPath();ctx.ellipse(x,1030+i*10,430,22,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+(()=>{"use strict";
+const canvas=document.getElementById("fireplace"),ctx=canvas.getContext("2d",{alpha:false}),W=1920,H=1080;
+canvas.width=W;canvas.height=H;
+const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+let t=0,sparks=[],audioContext=null,audioDestination=null,recording=false;
+function rounded(x,y,w,h,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function background(){
+ const bg=ctx.createRadialGradient(960,650,80,960,560,1250);bg.addColorStop(0,"#493020");bg.addColorStop(.42,"#21150f");bg.addColorStop(1,"#070504");ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ rounded(315,75,1290,925,20,"#17100c");const stone=ctx.createLinearGradient(0,90,0,980);stone.addColorStop(0,"#514033");stone.addColorStop(.5,"#302219");stone.addColorStop(1,"#1b120d");rounded(355,110,1210,855,12,stone);
+ for(let y=132;y<945;y+=72){const off=(Math.floor(y/72)%2)*62;for(let x=380+off;x<1510;x+=124){ctx.strokeStyle="rgba(10,6,4,.43)";ctx.lineWidth=4;ctx.strokeRect(x,y,118,66);ctx.strokeStyle="rgba(194,151,111,.08)";ctx.lineWidth=1;ctx.strokeRect(x+3,y+3,112,60)}}
+ rounded(490,245,940,650,8,"#080604");const inner=ctx.createLinearGradient(0,260,0,890);inner.addColorStop(0,"#090604");inner.addColorStop(.7,"#1a0c05");inner.addColorStop(1,"#090604");rounded(515,265,890,610,4,inner);
+ rounded(300,910,1320,78,9,"#241910");rounded(285,895,1350,25,6,"#60432d");ctx.fillStyle="rgba(0,0,0,.45)";ctx.fillRect(300,978,1320,16);
+ for(let i=0;i<34;i++){const x=rand(365,1545),y=rand(125,875);ctx.fillStyle="rgba(255,210,160,"+rand(.015,.055)+")";ctx.beginPath();ctx.ellipse(x,y,rand(8,35),rand(3,10),rand(-.5,.5),0,Math.PI*2);ctx.fill()}
 }
-async function downloadLoop(){
- if(recording)return;
- if(!('VideoEncoder' in window)||!('VideoFrame' in window)){downloadStatus.textContent='MP4 export requires a recent version of Chrome or Edge with WebCodecs support.';return}
- recording=true;downloadButton.disabled=true;downloadStatus.textContent='Preparing MP4 encoder…';
- let encoder,raf;
- try{
-  const {Muxer,ArrayBufferTarget}=await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.mjs');
-  const width=1920,height=1080,fps=30,totalFrames=25*fps;
-  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
-  const ctx=canvas.getContext('2d',{alpha:false});
-  const config={codec:'avc1.640028',width,height,bitrate:8000000,framerate:fps,avc:{format:'avc'}};
-  const supported=await VideoEncoder.isConfigSupported(config);
-  if(!supported.supported)throw new Error('This browser does not support the required H.264 MP4 encoder.');
-  const target=new ArrayBufferTarget();
-  const muxer=new Muxer({target,video:{codec:'avc',width,height,frameRate:fps},fastStart:'in-memory'});
-  encoder=new VideoEncoder({output:(chunk,meta)=>muxer.addVideoChunk(chunk,meta),error:e=>{throw e}});
-  encoder.configure(config);
-  for(let i=0;i<totalFrames;i++){
-   drawFrame(ctx,i/fps);
-   const frame=new VideoFrame(canvas,{timestamp:Math.round(i*1000000/fps),duration:Math.round(1000000/fps)});
-   encoder.encode(frame,{keyFrame:i===0||i%150===0});frame.close();
-   if(i%30===0){downloadStatus.textContent='Encoding MP4… '+Math.round(i/totalFrames*100)+'%';await new Promise(resolve=>setTimeout(resolve,0))}
-  }
-  downloadStatus.textContent='Finalizing MP4…';
-  await encoder.flush();encoder.close();muxer.finalize();
-  const blob=new Blob([target.buffer],{type:'video/mp4'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='halloween-loop-25-seconds.mp4';document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);
-  downloadStatus.textContent='Downloaded: halloween-loop-25-seconds.mp4';
- }catch(error){
-  if(encoder&&encoder.state!=='closed')encoder.close();
-  downloadStatus.textContent='MP4 export failed: '+(error&&error.message?error.message:'unsupported browser');
- }finally{recording=false;downloadButton.disabled=false}
+function drawLogs(){
+ const logs=[{x:650,y:827,w:620,h:72,a:-.045},{x:715,y:785,w:500,h:68,a:.075},{x:760,y:850,w:430,h:64,a:-.025}];
+ logs.forEach((l,i)=>{ctx.save();ctx.translate(l.x,l.y);ctx.rotate(l.a);ctx.shadowColor="#ff6818";ctx.shadowBlur=24;const wood=ctx.createLinearGradient(0,-l.h/2,0,l.h/2);wood.addColorStop(0,"#75472b");wood.addColorStop(.24,"#422516");wood.addColorStop(.72,"#241209");wood.addColorStop(1,"#100805");ctx.fillStyle=wood;ctx.beginPath();ctx.roundRect(0,-l.h/2,l.w,l.h,l.h/2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle="#6b4028";ctx.beginPath();ctx.ellipse(l.w-12,0,24,l.h/2-3,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle="rgba(20,8,3,.65)";ctx.lineWidth=4;for(let k=0;k<5;k++){const yy=-23+k*11;ctx.beginPath();ctx.moveTo(28,yy);ctx.bezierCurveTo(l.w*.25,yy-8,l.w*.55,yy+8,l.w-30,yy-3);ctx.stroke()}ctx.shadowColor="#ff5a12";ctx.shadowBlur=17;ctx.strokeStyle="rgba(255,"+(75+Math.sin(t*3+i)*25)+",12,.85)";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(120,-10);ctx.lineTo(155,3);ctx.lineTo(184,-5);ctx.lineTo(207,9);ctx.stroke();ctx.beginPath();ctx.moveTo(350,12);ctx.lineTo(380,-2);ctx.lineTo(405,5);ctx.stroke();ctx.restore()});
 }
-downloadButton.addEventListener('click',downloadLoop);
-document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='h'&&!e.repeat){document.body.classList.toggle('clean');cleanButton.textContent=document.body.classList.contains('clean')?'Show controls':'Stream mode'}if(e.key.toLowerCase()==='d'&&!e.repeat&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();downloadLoop()}});
-</script>
-</body>
-</html>
+function flame(x,base,width,height,hue,seed,layer){
+ const flicker=1+.10*Math.sin(t*4.1+seed)+.055*Math.sin(t*8.7+seed*1.7)+.025*Math.sin(t*14+seed),h=height*flicker,w=width*(1+.08*Math.sin(t*5+seed)),sway=Math.sin(t*2.3+seed)*width*.16;
+ ctx.save();ctx.translate(sway,0);ctx.globalAlpha=layer===0?.52:layer===1?.78:1;ctx.shadowBlur=layer===2?30:18;ctx.shadowColor="hsl("+hue+",100%,48%)";
+ const g=ctx.createLinearGradient(x,base-h,x,base);g.addColorStop(0,"hsla("+(hue+8)+",100%,58%,0)");g.addColorStop(.22,"hsla("+hue+",100%,54%,.8)");g.addColorStop(.66,"hsla("+(hue-8)+",100%,48%,.96)");g.addColorStop(1,"rgba(255,220,135,.96)");ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(x-w*.5,base);ctx.bezierCurveTo(x-w*.72,base-h*.24,x-w*.16,base-h*.56,x+w*.03,base-h);ctx.bezierCurveTo(x+w*.02,base-h*.68,x+w*.83,base-h*.43,x+w*.5,base);ctx.closePath();ctx.fill();
+ if(layer===2){ctx.globalAlpha=.58;ctx.shadowBlur=13;ctx.fillStyle="rgba(255,225,145,.9)";ctx.beginPath();ctx.moveTo(x-w*.2,base);ctx.bezierCurveTo(x-w*.3,base-h*.27,x+w*.28,base-h*.38,x+w*.02,base-h*.68);ctx.bezierCurveTo(x+w*.4,base-h*.38,x+w*.3,base-h*.18,x+w*.2,base);ctx.fill()}ctx.restore();
+}
+function drawFire(){
+ const glow=ctx.createRadialGradient(960,785,20,960,710,520);glow.addColorStop(0,"rgba(255,132,28,.34)");glow.addColorStop(.45,"rgba(255,74,10,.16)");glow.addColorStop(1,"rgba(255,45,0,0)");ctx.fillStyle=glow;ctx.fillRect(420,270,1080,650);
+ for(let i=0;i<13;i++)flame(570+i*64+Math.sin(t*1.8+i)*9,824,82,250+Math.sin(t*2+i)*24,8+(Math.sin(t*1.4+i)*.5+.5)*23,i,0);
+ for(let i=0;i<11;i++)flame(620+i*66+Math.sin(t*2.5+i)*13,835,92,325+Math.sin(t*3+i)*48,8+(Math.sin(t*1.4+i+20)*.5+.5)*23,i+20,1);
+ for(let i=0;i<7;i++)flame(715+i*78+Math.sin(t*3+i)*12,835,75,290+Math.sin(t*3.6+i)*50,8+(Math.sin(t*1.4+i+40)*.5+.5)*23,i+40,2);
+ const core=ctx.createRadialGradient(960,824,5,960,824,290);core.addColorStop(0,"rgba(255,245,185,.88)");core.addColorStop(.25,"rgba(255,181,66,.55)");core.addColorStop(1,"rgba(255,92,12,0)");ctx.fillStyle=core;ctx.fillRect(630,650,660,260);
+}
+function updateSparks(){
+ if(Math.random()<.48)sparks.push({x:rand(700,1220),y:rand(745,840),vx:rand(-1.5,1.5),vy:rand(-4.8,-1.2),life:rand(28,85),size:rand(1.5,4)});
+ sparks.forEach(s=>{s.x+=s.vx+Math.sin(t*3+s.y)*.35;s.y+=s.vy;s.vy+=.025;s.life--;ctx.save();ctx.globalAlpha=clamp(s.life/85,0,1);ctx.fillStyle=Math.random()>.5?"#ffdb83":"#ff7927";ctx.shadowColor="#ff7b22";ctx.shadowBlur=13;ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill();ctx.restore()});sparks=sparks.filter(s=>s.life>0&&s.y>250);
+}
+function render(){t+=1/60;ctx.clearRect(0,0,W,H);background();drawFire();drawLogs();updateSparks();const reflection=ctx.createLinearGradient(0,840,0,1020);reflection.addColorStop(0,"rgba(255,112,24,.18)");reflection.addColorStop(1,"rgba(255,90,12,0)");ctx.fillStyle=reflection;ctx.fillRect(420,840,1080,170);const v=ctx.createRadialGradient(960,540,380,960,540,1120);v.addColorStop(0,"rgba(0,0,0,0)");v.addColorStop(1,"rgba(0,0,0,.48)");ctx.fillStyle=v;ctx.fillRect(0,0,W,H);requestAnimationFrame(render)}
+render();
+function startAudio(){
+ if(audioContext){audioContext.resume();return}
+ audioContext=new AudioContext();audioDestination=audioContext.createMediaStreamDestination();const buffer=audioContext.createBuffer(1,audioContext.sampleRate*3,audioContext.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*.12;
+ const noise=audioContext.createBufferSource();noise.buffer=buffer;noise.loop=true;const filter=audioContext.createBiquadFilter();filter.type="lowpass";filter.frequency.value=620;const gain=audioContext.createGain();gain.gain.value=.42;noise.connect(filter);filter.connect(gain);gain.connect(audioDestination);gain.connect(audioContext.destination);noise.start();
+ function crackle(){if(!audioContext||audioContext.state!=="running")return;const osc=audioContext.createOscillator(),g=audioContext.createGain();osc.type="triangle";osc.frequency.value=rand(450,2100);g.gain.setValueAtTime(.0001,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(rand(.012,.035),audioContext.currentTime+.008);g.gain.exponentialRampToValueAtTime(.0001,audioContext.currentTime+.085);osc.connect(g);g.connect(audioDestination);g.connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+.09);setTimeout(crackle,rand(150,850))}
+ crackle();document.getElementById("audio").textContent="Fire audio enabled";
+}
+document.getElementById("audio").addEventListener("click",()=>{startAudio();audioContext.resume()});
+document.getElementById("fullscreen").addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}});
+function setStatus(s){document.getElementById("status").textContent=s}
+async function recordVideo(){
+ if(recording)return;if(!window.MediaRecorder||!canvas.captureStream){setStatus("Video recording is not supported in this browser.");return}
+ recording=true;const button=document.getElementById("download");button.disabled=true;setStatus("Preparing 25-second recording…");if(!audioContext)startAudio();await audioContext.resume();
+ const stream=canvas.captureStream(30),track=audioDestination.stream.getAudioTracks()[0];if(track)stream.addTrack(track);
+ let mime="video/webm;codecs=vp9,opus";if(!MediaRecorder.isTypeSupported(mime))mime="video/webm;codecs=vp8,opus";if(!MediaRecorder.isTypeSupported(mime))mime="video/webm";
+ const chunks=[],recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8000000,audioBitsPerSecond:128000});recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+ recorder.onerror=()=>{setStatus("Recording failed. Please try again.");recording=false;button.disabled=false;stream.getTracks().forEach(x=>x.stop())};
+ recorder.onstop=()=>{const blob=new Blob(chunks,{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="fireplace-25-seconds.webm";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);stream.getTracks().forEach(x=>x.stop());setStatus("Downloaded fireplace-25-seconds.webm");recording=false;button.disabled=false};
+ recorder.start(250);let remaining=25;setStatus("Recording: 25 seconds remaining");const timer=setInterval(()=>{remaining--;setStatus("Recording: "+remaining+" seconds remaining");if(remaining<=0){clearInterval(timer);recorder.stop()}},1000);
+}
+document.getElementById("download").addEventListener("click",recordVideo);
+document.addEventListener("keydown",e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key.toLowerCase()==="d"&&!["INPUT","TEXTAREA"].includes(document.activeElement.tagName)){e.preventDefault();recordVideo()}if(e.key.toLowerCase()==="f"){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}if(e.key.toLowerCase()==="h")document.body.classList.toggle("controls-visible")});
+})();
+</script></body></html>
