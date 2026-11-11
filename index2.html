@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fireplace Screensaver</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    background:#080604;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+}
+
+canvas {
+    width:100vw;
+    height:100vh;
+    display:block;
+}
+
+#controls {
+    position:fixed;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:12px;
+    align-items:center;
+    background:rgba(12,10,8,.78);
+    border:1px solid rgba(255,180,90,.2);
+    padding:12px 20px;
+    border-radius:12px;
+    color:#ddd;
+    opacity:0;
+    transition:opacity .4s;
+    backdrop-filter:blur(12px);
+}
+
+body:hover #controls {
+    opacity:1;
+}
+
+button {
+    background:#9c4d20;
+    color:white;
+    border:0;
+    padding:11px 17px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+button:hover { background:#c66b2b; }
+
+#status {
+    font-size:12px;
+    color:#f5bd83;
+}
+
+#hint {
+    position:fixed;
+    top:20px;
+    right:25px;
+    color:rgba(255,255,255,.45);
+    font-size:12px;
+    opacity:0;
+    transition:opacity .4s;
+}
+
+body:hover #hint { opacity:1; }
+</style>
+</head>
+<body>
+
+<canvas id="fire"></canvas>
+
+<div id="hint">D — Download 25-second video | F — Fullscreen</div>
+
+<div id="controls">
+    <button onclick="recordVideo()">Download 25s Video (D)</button>
+    <button onclick="toggleFullscreen()">Fullscreen (F)</button>
+    <span id="status">Fireplace running</span>
+</div>
+
+<script>
+const canvas = document.getElementById("fire");
+const ctx = canvas.getContext("2d");
+
+const W = 1920;
+const H = 1080;
+
+canvas.width = W;
+canvas.height = H;
+
+let time = 0;
+let sparks = [];
+let recording = false;
+
+const rand = (a,b) => Math.random() * (b-a) + a;
+
+function roundedRect(x,y,w,h,r,color) {
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.roundRect(x,y,w,h,r);
+    ctx.fill();
+}
+
+function drawBackground() {
+    const bg = ctx.createRadialGradient(
+        W/2, H*.67, 100,
+        W/2, H*.5, 1150
+    );
+
+    bg.addColorStop(0,"#49301d");
+    bg.addColorStop(.5,"#21170f");
+    bg.addColorStop(1,"#080604");
+
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,W,H);
+
+    // Fireplace surround
+    roundedRect(350,115,1220,850,18,"#19120e");
+    roundedRect(390,145,1140,795,8,"#443126");
+
+    // Brickwork
+    for(let y=165;y<920;y+=65) {
+        for(let x=410+(Math.floor(y/65)%2)*65;x<1510;x+=130) {
+            ctx.strokeStyle="rgba(12,7,4,.38)";
+            ctx.lineWidth=5;
+            ctx.strokeRect(x,y,125,60);
+        }
+    }
+
+    // Firebox
+    roundedRect(510,280,900,600,8,"#080605");
+
+    const glow=ctx.createRadialGradient(
+        960,740,30,960,740,620
+    );
+    glow.addColorStop(0,"rgba(255,100,15,.17)");
+    glow.addColorStop(1,"rgba(0,0,0,0)");
+
+    ctx.fillStyle=glow;
+    ctx.fillRect(350,200,1220,750);
+
+    // Hearth
+    roundedRect(380,890,1160,65,8,"#30231a");
+    ctx.fillStyle="#57402d";
+    ctx.fillRect(380,890,1160,9);
+}
+
+function drawLogs() {
+    // Rear logs
+    ctx.save();
+
+    const logs=[
+        [690,795,540,-.10],
+        [760,825,430,.12],
+        [650,845,650,-.04]
+    ];
+
+    logs.forEach(([x,y,w,angle],i)=>{
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(angle);
+
+        ctx.shadowBlur=25;
+        ctx.shadowColor="#ff6a15";
+
+        const wood=ctx.createLinearGradient(0,-30,0,35);
+        wood.addColorStop(0,"#68412a");
+        wood.addColorStop(.5,"#25140e");
+        wood.addColorStop(1,"#100907");
+
+        ctx.fillStyle=wood;
+        ctx.beginPath();
+        ctx.roundRect(0,-30,w,65,24);
+        ctx.fill();
+
+        // Wood grain
+        ctx.shadowBlur=0;
+        ctx.strokeStyle="rgba(180,105,50,.35)";
+        ctx.lineWidth=3;
+
+        for(let j=0;j<4;j++){
+            ctx.beginPath();
+            ctx.moveTo(30,rand(-15,15));
+            ctx.bezierCurveTo(
+                w*.3,rand(-20,20),
+                w*.7,rand(-20,20),
+                w-30,rand(-15,15)
+            );
+            ctx.stroke();
+        }
+
+        // Glowing edges
+        ctx.strokeStyle="rgba(255,90,15,.65)";
+        ctx.lineWidth=4;
+        ctx.beginPath();
+        ctx.moveTo(30,27);
+        ctx.lineTo(w-30,27);
+        ctx.stroke();
+
+        ctx.restore();
+    });
+
+    ctx.restore();
+}
+
+function flame(x,base,width,height,hue,seed) {
+    const flicker=Math.sin(time*3+seed)*.09+
+                   Math.sin(time*6.2+seed)*.06;
+
+    const h=height*(1+flicker);
+    const w=width*(1+Math.sin(time*4+seed)*.08);
+
+    ctx.save();
+
+    ctx.shadowBlur=35;
+    ctx.shadowColor=`hsl(${hue},100%,48%)`;
+
+    const gradient=ctx.createLinearGradient(
+        x,base-h,x,base
+    );
+
+    gradient.addColorStop(0,`hsla(${hue+12},100%,55%,0)`);
+    gradient.addColorStop(.3,`hsla(${hue},100%,55%,.85)`);
+    gradient.addColorStop(.75,`hsla(${hue-12},100%,50%,.95)`);
+    gradient.addColorStop(1,"rgba(255,225,130,.95)");
+
+    ctx.fillStyle=gradient;
+
+    ctx.beginPath();
+    ctx.moveTo(x-w/2,base);
+    ctx.bezierCurveTo(
+        x-w*.8,base-h*.35,
+        x+w*.4,base-h*.55,
+        x+w*.08,base-h
+    );
+    ctx.bezierCurveTo(
+        x+w*.55,base-h*.58,
+        x+w*.8,base-h*.2,
+        x+w/2,base
+    );
+    ctx.closePath();
+    ctx.fill();
+
+    // Bright inner flame
+    ctx.shadowBlur=18;
+    ctx.fillStyle="rgba(255,210,105,.65)";
+    ctx.beginPath();
+    ctx.moveTo(x-w*.22,base);
+    ctx.bezierCurveTo(
+        x-w*.3,base-h*.3,
+        x+w*.25,base-h*.4,
+        x+w*.02,base-h*.67
+    );
+    ctx.bezierCurveTo(
+        x+w*.4,base-h*.35,
+        x+w*.35,base-h*.2,
+        x+w*.22,base
+    );
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawFire() {
+    // Ambient glow
+    const glow=ctx.createRadialGradient(
+        960,790,30,960,700,500
+    );
+
+    glow.addColorStop(0,"rgba(255,115,15,.30)");
+    glow.addColorStop(.5,"rgba(255,65,5,.10)");
+    glow.addColorStop(1,"rgba(255,50,0,0)");
+
+    ctx.fillStyle=glow;
+    ctx.fillRect(400,250,1120,650);
+
+    // Back flames
+    for(let i=0;i<13;i++) {
+        const x=580+i*63+Math.sin(time*2+i)*12;
+        flame(x,810,90+rand(0,20),280+Math.sin(time*2+i)*35,rand(15,35),i);
+    }
+
+    // Main flames
+    for(let i=0;i<9;i++) {
+        const x=650+i*78+Math.sin(time*3+i)*15;
+        flame(x,830,95+rand(0,20),360+Math.sin(time*2.8+i)*65,rand(5,25),i+20);
+    }
+
+    // White-hot center
+    const hot=ctx.createRadialGradient(960,825,5,960,825,250);
+    hot.addColorStop(0,"rgba(255,235,155,.9)");
+    hot.addColorStop(.3,"rgba(255,160,40,.5)");
+    hot.addColorStop(1,"rgba(255,100,0,0)");
+
+    ctx.fillStyle=hot;
+    ctx.fillRect(650,650,620,250);
+}
+
+function createSparks() {
+    if(Math.random()<.38) {
+        sparks.push({
+            x:rand(700,1220),
+            y:rand(710,850),
+            vx:rand(-1.8,1.8),
+            vy:rand(-5,-1),
+            life:rand(30,90),
+            size:rand(2,5)
+        });
+    }
+
+    sparks.forEach((s,i)=>{
+        s.x+=s.vx+Math.sin(time*3+i)*.5;
+        s.y+=s.vy;
+        s.vy+=.035;
+        s.life--;
+
+        ctx.beginPath();
+        ctx.fillStyle=`rgba(255,${rand(120,220)},40,${s.life/90})`;
+        ctx.shadowBlur=12;
+        ctx.shadowColor="#ff8a20";
+        ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+        ctx.fill();
+    });
+
+    ctx.shadowBlur=0;
+    sparks=sparks.filter(s=>s.life>0);
+}
+
+function draw() {
+    time+=1/30;
+
+    ctx.clearRect(0,0,W,H);
+
+    drawBackground();
+    drawFire();
+    drawLogs();
+    createSparks();
+
+    // Subtle screen vignette
+    const vignette=ctx.createRadialGradient(
+        960,540,350,960,540,1100
+    );
+
+    vignette.addColorStop(0,"rgba(0,0,0,0)");
+    vignette.addColorStop(1,"rgba(0,0,0,.5)");
+
+    ctx.fillStyle=vignette;
+    ctx.fillRect(0,0,W,H);
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+
+// Fireplace audio
+let audioContext;
+let audioDestination;
+
+function startAudio() {
+    if(audioContext) {
+        audioContext.resume();
+        return;
+    }
+
+    audioContext=new AudioContext();
+    audioDestination=audioContext.createMediaStreamDestination();
+
+    // Soft continuous fire noise
+    const buffer=audioContext.createBuffer(
+        1,audioContext.sampleRate*3,audioContext.sampleRate
+    );
+
+    const data=buffer.getChannelData(0);
+
+    for(let i=0;i<data.length;i++) {
+        data[i]=(Math.random()*2-1)*.12;
+    }
+
+    const noise=audioContext.createBufferSource();
+    noise.buffer=buffer;
+    noise.loop=true;
+
+    const filter=audioContext.createBiquadFilter();
+    filter.type="lowpass";
+    filter.frequency.value=550;
+
+    const volume=audioContext.createGain();
+    volume.gain.value=.55;
+
+    noise.connect(filter);
+    filter.connect(volume);
+    volume.connect(audioDestination);
+    noise.start();
+
+    // Random individual crackles
+    function crackle() {
+        if(!audioContext || audioContext.state!=="running") return;
+
+        const osc=audioContext.createOscillator();
+        const gain=audioContext.createGain();
+
+        osc.type="triangle";
+        osc.frequency.value=rand(500,2200);
+
+        gain.gain.setValueAtTime(.0001,audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            .045,audioContext.currentTime+.008
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,audioContext.currentTime+.09
+        );
+
+        osc.connect(gain);
+        gain.connect(audioDestination);
+
+        osc.start();
+        osc.stop(audioContext.currentTime+.1);
+
+        setTimeout(crackle,rand(120,650));
+    }
+
+    crackle();
+}
+
+// Record a 25-second video
+async function recordVideo() {
+    if(recording) return;
+
+    if(!window.MediaRecorder || !canvas.captureStream) {
+        alert("Your browser does not support video recording.");
+        return;
+    }
+
+    recording=true;
+
+    const status=document.getElementById("status");
+    status.textContent="Preparing recording...";
+
+    startAudio();
+
+    await audioContext.resume();
+
+    const videoStream=canvas.captureStream(30);
+    const audioTrack=audioDestination.stream.getAudioTracks()[0];
+
+    videoStream.addTrack(audioTrack);
+
+    let mime="video/webm;codecs=vp9,opus";
+
+    if(!MediaRecorder.isTypeSupported(mime)) {
+        mime="video/webm;codecs=vp8,opus";
+    }
+
+    if(!MediaRecorder.isTypeSupported(mime)) {
+        mime="video/webm";
+    }
+
+    const chunks=[];
+
+    const recorder=new MediaRecorder(videoStream,{
+        mimeType:mime,
+        videoBitsPerSecond:8000000,
+        audioBitsPerSecond:128000
+    });
+
+    recorder.ondataavailable=e=>{
+        if(e.data.size>0) chunks.push(e.data);
+    };
+
+    recorder.onstop=()=>{
+        const blob=new Blob(chunks,{type:"video/webm"});
+        const url=URL.createObjectURL(blob);
+
+        const a=document.createElement("a");
+        a.href=url;
+        a.download="fireplace-25-seconds.webm";
+        a.click();
+
+        setTimeout(()=>URL.revokeObjectURL(url),60000);
+
+        videoStream.getTracks().forEach(t=>t.stop());
+
+        status.textContent="Video downloaded!";
+        recording=false;
+    };
+
+    recorder.start(250);
+
+    let remaining=25;
+
+    status.textContent="Recording: 25 seconds";
+
+    const interval=setInterval(()=>{
+        remaining--;
+        status.textContent=`Recording: ${remaining} seconds`;
+
+        if(remaining<=0) {
+            clearInterval(interval);
+            recorder.stop();
+        }
+    },1000);
+}
+
+function toggleFullscreen() {
+    if(!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+// Keyboard shortcuts
+document.addEventListener("keydown",e=>{
+    if(e.repeat) return;
+
+    if(e.key.toLowerCase()==="d") {
+        recordVideo();
+    }
+
+    if(e.key.toLowerCase()==="f") {
+        toggleFullscreen();
+    }
+});
+</script>
+</body>
+</html>
