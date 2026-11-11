@@ -1,19 +1,23 @@
-# Halloween Livestream Background
+# Hearth — Fireplace Screensaver
 
-A full-screen animated 16:9 Halloween scene designed as a browser source for OBS Studio or another livestreaming tool.
+A full-screen animated fireplace designed for a display, screensaver-style ambience, or a browser source in OBS.
 
-## Preview
-Open `index.html` locally or visit the deployed Worker URL.
+## Features
+- Animated 1920 × 1080 fireplace with layered flames, glowing logs, ember cracks, sparks, and warm light.
+- Fullscreen mode with the F key.
+- Press D to record and download a 25-second video with synthesized crackling ambience.
+- Video exports as WebM at 30 FPS. YouTube accepts WebM uploads.
+- Audio starts after a user interaction because browsers restrict autoplay audio.
+- Press H to toggle the controls.
 
-## Stream setup
-1. Add the deployed URL as a **Browser Source** in OBS.
-2. Set the source dimensions to **1920 × 1080**.
-3. Click **Stream mode** to hide the on-page controls. Press **H** to toggle controls again.
-4. Use **Fullscreen** when previewing in a normal browser.
+## Run locally
+Open index.html in a recent version of Chrome or Edge. Click Enable fire audio once to activate sound.
 
-## Music and copyright
-The Spotify playlist button opens the supplied playlist separately. Spotify playback is not embedded into the broadcast. Do not capture or rebroadcast Spotify audio in a YouTube livestream unless you have the necessary public-performance and streaming rights. Add music you are licensed to use through OBS or YouTube's Audio Library instead.
+## OBS
+Add the deployed Worker URL as a Browser Source and set its dimensions to 1920 × 1080.
 
 ## Worker
-- Worker name: `halloween-livestream`
-- Health check: `/health`
+- Worker name: fireplace-screensaver
+- Health check: /health
+
+The crackling audio is synthesized in-browser; it is not a field recording.
